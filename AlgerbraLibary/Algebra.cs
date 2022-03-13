@@ -169,6 +169,30 @@ namespace AlgebraLibary
 
                 }
             }
+            else if (a.algebras.Count == 1)
+            {
+                for (int i = 0; i < a.algebras.Count; i++)
+                {
+                    for (int j = 0; j < b.algebras.Count; j++)
+                    {
+
+                        c.Add(a.algebras[i] * b.algebras[j]);
+                    }
+
+                }
+            }
+            else if (b.algebras.Count == 1)
+            {
+                for (int i = 0; i < b.algebras.Count; i++)
+                {
+                    for (int j = 0; j < a.algebras.Count; j++)
+                    {
+
+                        c.Add(b.algebras[i] * a.algebras[j]);
+                    }
+
+                }
+            }
             else
             {
                 c.Add(a.algebras[0] * b.algebras[0]);
@@ -205,13 +229,70 @@ namespace AlgebraLibary
         {
             List<Algebra> c = new List<Algebra>();
 
-            if (a.algebras.Count != 1 && a.algebras.Count != 1)
+            /*
+            if (a.algebras.Count != 1 && b.algebras.Count != 1)
             {
                 for (int i = 0; i < a.algebras.Count; i++)
                 {
                     c.Add(a.algebras[i] + b.algebras[i]);
                 }
             }
+            */
+
+            if (a.algebras.Count != 1 && b.algebras.Count != 1) // If both expressions are not one
+            {
+                for (int i = 0; i < a.algebras.Count; i++)
+                {
+                    for (int j = 0; j < b.algebras.Count; j++)
+                    {
+                        if (a.algebras[i].XPower == b.algebras[j].XPower)
+                        {
+                            c.Add(a.algebras[i] + b.algebras[j]);
+                        }
+                    }
+
+                }
+            }
+            else if (a.algebras.Count == 1)
+            {
+                for (int i = 0; i < a.algebras.Count; i++)
+                {
+                    for (int j = 0; j < b.algebras.Count; j++)
+                    {
+                        if (a.algebras[i].XPower == b.algebras[j].XPower)
+                        {
+                            c.Add(a.algebras[i] + b.algebras[j]);
+                        }
+                    }
+
+                }
+            }
+            else if (b.algebras.Count == 1)
+            {
+                for (int i = 0; i < b.algebras.Count; i++)
+                {
+                    for (int j = 0; j < a.algebras.Count; j++)
+                    {
+                        if (b.algebras[i].XPower == a.algebras[j].XPower)
+                        {
+                            c.Add(b.algebras[i] + a.algebras[j]);
+                        }
+                        else
+                        {
+                            c.Add(a.algebras[j]);
+                        }
+                    }
+
+                }
+            }
+            else
+            {
+                c.Add(a.algebras[0] + b.algebras[0]);
+            }
+
+
+
+
             return new(c);
         }
 
@@ -219,12 +300,55 @@ namespace AlgebraLibary
         {
             List<Algebra> c = new List<Algebra>();
 
-            if (a.algebras.Count != 1 && a.algebras.Count != 1)
+            if (a.algebras.Count != 1 && b.algebras.Count != 1) // If both expressions are not one
             {
                 for (int i = 0; i < a.algebras.Count; i++)
                 {
-                    c.Add(a.algebras[i] - b.algebras[i]);
+                    for (int j = 0; j < b.algebras.Count; j++)
+                    {
+                        if (a.algebras[i].XPower == b.algebras[j].XPower)
+                        {
+                            c.Add(a.algebras[i] - b.algebras[j]);
+                        }
+                    }
+
                 }
+            } 
+            else if (a.algebras.Count == 1)
+            {
+                for (int i = 0; i < a.algebras.Count; i++)
+                {
+                    for (int j = 0; j < b.algebras.Count; j++)
+                    {
+                        if (a.algebras[i].XPower == b.algebras[j].XPower)
+                        {
+                            c.Add(a.algebras[i] - b.algebras[j]);
+                        }
+                    }
+
+                }
+            }
+            else if (b.algebras.Count == 1)
+            {
+                for (int i = 0; i < b.algebras.Count; i++)
+                {
+                    for (int j = 0; j < a.algebras.Count; j++)
+                    {
+                        if (b.algebras[i].XPower == a.algebras[j].XPower)
+                        {
+                            c.Add(b.algebras[i] - a.algebras[j]);
+                        }
+                        else
+                        {
+                            c.Add(a.algebras[j]);
+                        }
+                    }
+
+                }
+            }
+            else
+            {
+                c.Add(a.algebras[0] - b.algebras[0]);
             }
 
             return new(c);

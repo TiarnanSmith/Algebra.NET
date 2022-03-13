@@ -19,16 +19,14 @@ namespace algerbraConsole
             Console.WriteLine($"Inverse = {M1.matrixInverse()}");
             */
 
-
-
-            string eh = "-12x -3 +2x^2";
-
-            List<Algebra> al = new List<Algebra>();
-            AlgebraExpression eq = new AlgebraExpression(al);
-            eq = eq.ToAlgebra(eh);
-
-            Console.WriteLine(eh);
-            Console.WriteLine(eq.Substitute(-2));
+            List<Algebra> al = new List<Algebra>(); // Current limitation of the constructors requires this.
+            AlgebraExpression eq1 = new AlgebraExpression(al);
+            AlgebraExpression eq2 = new AlgebraExpression(al);
+            string[] eqs = new string[2] { "-12x -3 +2x^2", "8x" };
+            eq1 = eq1.ToAlgebra(eqs[0]);
+            eq2 = eq1.ToAlgebra(eqs[1]);
+            eq1 = eq1 + eq2;
+            Console.WriteLine(eq1);
         }
     }
 }

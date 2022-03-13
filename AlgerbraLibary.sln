@@ -38,7 +38,6 @@ Global
 		{445916F8-0A2B-4E1B-8CBE-F71B821A3644}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{445916F8-0A2B-4E1B-8CBE-F71B821A3644}.Release|Any CPU.Build.0 = Release|Any CPU
 		{445916F8-0A2B-4E1B-8CBE-F71B821A3644}.Release|x64.ActiveCfg = Release|x64
-		{445916F8-0A2B-4E1B-8CBE-F71B821A3644}.Release|x64.Build.0 = Release|x64
 		{445916F8-0A2B-4E1B-8CBE-F71B821A3644}.Release|x86.ActiveCfg = Release|Any CPU
 		{445916F8-0A2B-4E1B-8CBE-F71B821A3644}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
