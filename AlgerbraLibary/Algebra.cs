@@ -143,12 +143,13 @@ namespace AlgebraLibary
 
         public AlgebraExpression(List<Algebra> algebras)
         {
-            this.Algebras = algebras;
+            Algebras = algebras;
             // Roots = quadraticEquation(this);
         }
         public AlgebraExpression()
         {
-            this.Algebras = algebras;
+            // find a way to allow this to work
+            Algebras = algebras;
             // Roots = quadraticEquation(this);
         }
 
@@ -315,17 +316,24 @@ namespace AlgebraLibary
 
 
         
-        public double substitute(double sub)
+        public double Substitute(double sub)
         {
             double result = 0;
 
             for (int i = 0; i < algebras.Count; i++)
             {
-                result += Math.Pow(sub,algebras[i].XPower);
+                double hold = 0;
+                hold += Math.Pow(sub,algebras[i].XPower);
+
                 if (algebras[i].Coefficient != 0)
                 {
-                    result *= algebras[i].Coefficient;
+                    hold *= algebras[i].Coefficient;
                 }
+                
+
+                result += hold;
+
+                Console.WriteLine(result);
             }
 
             return result;
