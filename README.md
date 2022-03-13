@@ -1,4 +1,15 @@
 # Algebra.NET
 The MOPY C# Algebra Library 
 
-My own solution to the lack of a good C# Mathmatics Library, this is my second attempt at this.
+My own solution to the lack of a _good_ C# Mathmatics Library, this is my second attempt at this.
+
+- Algebra Support:
+  - Solving
+  - Roots
+  - Multiplication and Division
+  - Addition and Subtraction 
+  - Strings to Algerbra and Algerbra to Strings
+- Matrix Support:
+-   Multiplication
+-   Scalar Multiplication
+-   The Determinant
