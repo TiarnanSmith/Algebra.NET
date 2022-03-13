@@ -313,7 +313,25 @@ namespace AlgebraLibary
             return returnAlgebra;
         }
 
-        public AlgebraExpression ToAlgebra(string input)
+
+        
+        public double substitute(double sub)
+        {
+            double result = 0;
+
+            for (int i = 0; i < algebras.Count; i++)
+            {
+                result += Math.Pow(sub,algebras[i].XPower);
+                if (algebras[i].Coefficient != 0)
+                {
+                    result *= algebras[i].Coefficient;
+                }
+            }
+
+            return result;
+        }
+
+        public AlgebraExpression ToAlgebra(string input) // converts text into written algerbra
         {
             char[] unknowns = new char[] { 'x', 'y' };
 
