@@ -1,7 +1,6 @@
 ﻿using System;
 using AlgebraLibary;
 using System.Collections.Generic;
-using unsimplifedForm;
 
 namespace algerbraConsole
 {
@@ -20,12 +19,12 @@ namespace algerbraConsole
             */
 
             List<Algebra> al = new List<Algebra>(); // Current limitation of the constructors requires this.
-            AlgebraExpression eq1 = new AlgebraExpression(al);
-            AlgebraExpression eq2 = new AlgebraExpression(al);
-            string[] eqs = new string[2] { "-12x -3 +2x^2", "8x" };
-            eq1 = eq1.ToAlgebra(eqs[0]);
-            eq2 = eq1.ToAlgebra(eqs[1]);
-            eq1 = eq1 + eq2;
+            AlgebraExpression bal = new AlgebraExpression(al);
+            string[] eqs = new string[3] { "-2x^2", "8x", "9x" };
+            AlgebraExpression eq1 = bal.ToAlgebra(eqs[0]);
+            AlgebraExpression eq2 = bal.ToAlgebra(eqs[1]);
+            AlgebraExpression eq3 = bal.ToAlgebra(eqs[2]);
+            eq1 = eq1 + eq2 + eq3;
             Console.WriteLine(eq1);
         }
     }

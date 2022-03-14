@@ -290,7 +290,17 @@ namespace AlgebraLibary
                 c.Add(a.algebras[0] + b.algebras[0]);
             }
 
-
+            if (c.Count == 0) // unlike terms
+            {
+                for (int i = 0; i < b.algebras.Count; i++)
+                {
+                    c.Add(b.algebras[i]);
+                }
+                for (int i = 0; i < a.algebras.Count; i++)
+                {
+                    c.Add(a.algebras[i]);
+                }
+            }
 
 
             return new(c);
@@ -350,6 +360,19 @@ namespace AlgebraLibary
             {
                 c.Add(a.algebras[0] - b.algebras[0]);
             }
+
+            if (c.Count == 0) // unlike terms
+            {
+                for (int i = 0; i < b.algebras.Count; i++)
+                {
+                    c.Add(b.algebras[i]);
+                }
+                for (int i = 0; i < a.algebras.Count; i++)
+                {
+                    c.Add(a.algebras[i]);
+                }
+            }
+            
 
             return new(c);
         }
@@ -437,6 +460,8 @@ namespace AlgebraLibary
 
             return returnAlgebra;
         }
+
+        
 
 
         
@@ -948,28 +973,6 @@ namespace unsimplifedForm
             string returnString = $"{degree}/{radical}";
 
             return returnString;
-        }
-    }
-
-    public class surdFraction
-    {
-        private dynamic fraction, surd;
-        public dynamic Fraction
-        {
-            get { return fraction; }
-            set { fraction = value; }
-        }
-        public dynamic Surd { get; set; }
-
-        public surdFraction(dynamic fraction, dynamic surd)
-        {
-            this.Fraction = fraction;
-            this.Surd = surd;
-        }
-
-        private surdFraction surdCreate()
-        {
-            return new surdFraction(this.Fraction, this.Surd);
         }
     }
 }
