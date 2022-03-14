@@ -10,6 +10,6 @@ My own solution to the lack of a _good_ C# Mathmatics Library, this is my second
   - Addition and Subtraction 
   - Strings to Algerbra and Algerbra to Strings
 - Matrix Support:
--   Multiplication
--   Scalar Multiplication
--   The Determinant
+  - Multiplication
+  - Scalar Multiplication
+  - The Determinant
