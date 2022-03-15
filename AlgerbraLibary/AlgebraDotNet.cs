@@ -7,70 +7,45 @@ namespace AlgebraLibary
 {
     public class Algebra
     {
-        private double xpower, coefficient;
-        private string unknown;
-
-        public double Coefficient
-        {
-            get { return coefficient; }
-            set { coefficient = value; }
-        }
-
-        public string Unknown
-        {
-            get
-            {
-                Unknown = unknown;
-                unknown.ToLower();
-                return unknown;
-            }
-            set { this.unknown = value; }
-
-        }
-
-        public double XPower
-        {
-            get { return xpower; }
-            set { xpower = value; }
-
-        }
-
+        public double Coefficient { get; set; }
+        public string Unknown { get; set; }
+        public double XPower { get; set; }
 
         public Algebra(double coefficient, double xpower, string unknown)
         {
-            this.Coefficient = coefficient;
-            this.XPower = xpower;
-            this.Unknown = unknown;
+            Coefficient = coefficient;
+            XPower = xpower;
+            Unknown = unknown;
         }
 
         public Algebra()
         {
-            this.Coefficient = coefficient;
-            this.XPower = xpower;
-            this.Unknown = unknown;
+            Coefficient = 0;
+            XPower = 0;
+            Unknown = "x";
         }
 
         public static Algebra operator +(Algebra a, Algebra b)
         {
-            return a.Unknown == b.Unknown ? (a.xpower == b.xpower ? new(a.Coefficient + b.Coefficient, a.XPower = a.XPower, a.unknown = a.unknown) : null) : null;
+            return a.Unknown == b.Unknown ? (a.XPower == b.XPower ? new(a.Coefficient + b.Coefficient, a.XPower = a.XPower, a.Unknown = a.Unknown) : null) : null;
         }
         public static Algebra operator -(Algebra a, Algebra b)
         {
-            return a.Unknown == b.Unknown ? (a.xpower == b.xpower ? new(a.Coefficient - b.Coefficient, a.XPower = a.XPower, a.unknown = a.unknown) : null) : null;
+            return a.Unknown == b.Unknown ? (a.XPower == b.XPower ? new(a.Coefficient - b.Coefficient, a.XPower = a.XPower, a.Unknown = a.Unknown) : null) : null;
         }
         public static Algebra operator /(Algebra a, Algebra b)
         {
             if (a.Unknown == b.Unknown)
             {
-                return new(a.coefficient * b.coefficient, a.xpower = a.xpower, a.unknown = b.unknown);
+                return new(a.Coefficient * b.Coefficient, a.XPower = a.XPower, a.Unknown = b.Unknown);
             }
-            else if (a.unknown == "") // if there is no x term
+            else if (a.Unknown == "") // if there is no x term
             {
-                return new(a.Coefficient / b.Coefficient, a.XPower = a.XPower, a.unknown = b.unknown);
+                return new(a.Coefficient / b.Coefficient, a.XPower = a.XPower, a.Unknown = b.Unknown);
             }
             else // (a.Unknown != b.Unknown) If the x and y terms are not the same
             {
-                return new(a.Coefficient / b.Coefficient, a.XPower = a.XPower, a.unknown = a.unknown + b.unknown);
+                return new(a.Coefficient / b.Coefficient, a.XPower = a.XPower, a.Unknown = a.Unknown + b.Unknown);
             }
         }
 
@@ -79,15 +54,15 @@ namespace AlgebraLibary
         {
             if (a.Unknown == b.Unknown)
             {
-                return new(a.coefficient * b.coefficient, a.xpower + b.xpower, a.unknown = b.unknown);
+                return new(a.Coefficient * b.Coefficient, a.XPower + b.XPower, a.Unknown = b.Unknown);
             }
-            else if (a.unknown == "") // if there is no x term
+            else if (a.Unknown == "") // if there is no x term
             {
-                return new(a.Coefficient * b.Coefficient, a.XPower = a.XPower + b.XPower, a.unknown = b.unknown);
+                return new(a.Coefficient * b.Coefficient, a.XPower = a.XPower + b.XPower, a.Unknown = b.Unknown);
             }
             else // (a.Unknown != b.Unknown) If the x and y terms are not the same
             {
-                return new(a.Coefficient * b.Coefficient, a.XPower = a.XPower, a.unknown = a.unknown + b.unknown);
+                return new(a.Coefficient * b.Coefficient, a.XPower = a.XPower, a.Unknown = a.Unknown + b.Unknown);
             }
 
         }
@@ -97,17 +72,17 @@ namespace AlgebraLibary
         {
             string returnAlgebra;
 
-            if (xpower == 0)
+            if (XPower == 0)
             {
-                returnAlgebra = $"{coefficient}";
+                returnAlgebra = $"{Coefficient}";
             }
-            else if (xpower == 1)
+            else if (XPower == 1)
             {
-                returnAlgebra = $"{coefficient}{unknown}";
+                returnAlgebra = $"{Coefficient}{Unknown}";
             }
             else
             {
-                returnAlgebra = $"{coefficient}{unknown}^{xpower}";
+                returnAlgebra = $"{Coefficient}{Unknown}^{XPower}";
             }
 
             return returnAlgebra;
@@ -116,86 +91,58 @@ namespace AlgebraLibary
 
     public class AlgebraExpression
     {
-        // Nullable values as there is not always roots
-        private List<Algebra>? algebras;
-        private double[]? roots;
-        public double[]? Roots
-        {
-            get { return roots; }
-        }
-
-        public List<Algebra> Algebras
-        {
-            get { return algebras; }
-            set
-            {
-                this.algebras = value;
-                if (algebras.Count == 3)
-                {
-                    roots = quadraticEquation(this);
-                }
-                else
-                {
-                    roots = null;
-                }
-            }
-        }
+        public List<Algebra> Algebras { get; set; }
 
         public AlgebraExpression(List<Algebra> algebras)
         {
             Algebras = algebras;
             // Roots = quadraticEquation(this);
         }
-        public AlgebraExpression()
-        {
-            // find a way to allow this to work
-            Algebras = algebras;
-            // Roots = quadraticEquation(this);
-        }
+        
 
         public static AlgebraExpression operator *(AlgebraExpression a, AlgebraExpression b)
         {
             List<Algebra> c = new List<Algebra>();
 
-            if (a.algebras.Count != 1 && b.algebras.Count != 1)
+            if (a.Algebras.Count != 1 && b.Algebras.Count != 1)
             {
-                for (int i = 0; i < a.algebras.Count; i++)
+                for (int i = 0; i < a.Algebras.Count; i++)
                 {
-                    for (int j = 0; j < b.algebras.Count; j++)
+                    for (int j = 0; j < b.Algebras.Count; j++)
                     {
 
-                        c.Add(a.algebras[i] * b.algebras[j]);
+                        c.Add(a.Algebras[i] * b.Algebras[j]);
                     }
 
                 }
             }
-            else if (a.algebras.Count == 1)
+            else if (a.Algebras.Count == 1)
             {
-                for (int i = 0; i < a.algebras.Count; i++)
+                for (int i = 0; i < a.Algebras.Count; i++)
                 {
-                    for (int j = 0; j < b.algebras.Count; j++)
+                    for (int j = 0; j < b.Algebras.Count; j++)
                     {
 
-                        c.Add(a.algebras[i] * b.algebras[j]);
+                        c.Add(a.Algebras[i] * b.Algebras[j]);
                     }
 
                 }
             }
-            else if (b.algebras.Count == 1)
+            else if (b.Algebras.Count == 1)
             {
-                for (int i = 0; i < b.algebras.Count; i++)
+                for (int i = 0; i < b.Algebras.Count; i++)
                 {
-                    for (int j = 0; j < a.algebras.Count; j++)
+                    for (int j = 0; j < a.Algebras.Count; j++)
                     {
 
-                        c.Add(b.algebras[i] * a.algebras[j]);
+                        c.Add(b.Algebras[i] * a.Algebras[j]);
                     }
 
                 }
             }
             else
             {
-                c.Add(a.algebras[0] * b.algebras[0]);
+                c.Add(a.Algebras[0] * b.Algebras[0]);
             }
 
             return new(c);
@@ -205,21 +152,21 @@ namespace AlgebraLibary
         {
             List<Algebra> c = new List<Algebra>();
 
-            if (a.algebras.Count != 1 && b.algebras.Count != 1)
+            if (a.Algebras.Count != 1 && b.Algebras.Count != 1)
             {
-                for (int i = 0; i < a.algebras.Count; i++)
+                for (int i = 0; i < a.Algebras.Count; i++)
                 {
-                    for (int j = 0; j < b.algebras.Count; j++)
+                    for (int j = 0; j < b.Algebras.Count; j++)
                     {
 
-                        c.Add(a.algebras[i] / b.algebras[j]);
+                        c.Add(a.Algebras[i] / b.Algebras[j]);
                     }
 
                 }
             }
             else
             {
-                c.Add(a.algebras[0] * b.algebras[0]);
+                c.Add(a.Algebras[0] * b.Algebras[0]);
             }
 
             return new(c);
@@ -230,56 +177,56 @@ namespace AlgebraLibary
             List<Algebra> c = new List<Algebra>();
 
             /*
-            if (a.algebras.Count != 1 && b.algebras.Count != 1)
+            if (a.Algebras.Count != 1 && b.Algebras.Count != 1)
             {
-                for (int i = 0; i < a.algebras.Count; i++)
+                for (int i = 0; i < a.Algebras.Count; i++)
                 {
-                    c.Add(a.algebras[i] + b.algebras[i]);
+                    c.Add(a.Algebras[i] + b.Algebras[i]);
                 }
             }
             */
 
-            if (a.algebras.Count != 1 && b.algebras.Count != 1) // If both expressions are not one
+            if (a.Algebras.Count != 1 && b.Algebras.Count != 1) // If both expressions are not one
             {
-                for (int i = 0; i < a.algebras.Count; i++)
+                for (int i = 0; i < a.Algebras.Count; i++)
                 {
-                    for (int j = 0; j < b.algebras.Count; j++)
+                    for (int j = 0; j < b.Algebras.Count; j++)
                     {
-                        if (a.algebras[i].XPower == b.algebras[j].XPower)
+                        if (a.Algebras[i].XPower == b.Algebras[j].XPower)
                         {
-                            c.Add(a.algebras[i] + b.algebras[j]);
+                            c.Add(a.Algebras[i] + b.Algebras[j]);
                         }
                     }
 
                 }
             }
-            else if (a.algebras.Count == 1)
+            else if (a.Algebras.Count == 1)
             {
-                for (int i = 0; i < a.algebras.Count; i++)
+                for (int i = 0; i < a.Algebras.Count; i++)
                 {
-                    for (int j = 0; j < b.algebras.Count; j++)
+                    for (int j = 0; j < b.Algebras.Count; j++)
                     {
-                        if (a.algebras[i].XPower == b.algebras[j].XPower)
+                        if (a.Algebras[i].XPower == b.Algebras[j].XPower)
                         {
-                            c.Add(a.algebras[i] + b.algebras[j]);
+                            c.Add(a.Algebras[i] + b.Algebras[j]);
                         }
                     }
 
                 }
             }
-            else if (b.algebras.Count == 1)
+            else if (b.Algebras.Count == 1)
             {
-                for (int i = 0; i < b.algebras.Count; i++)
+                for (int i = 0; i < b.Algebras.Count; i++)
                 {
-                    for (int j = 0; j < a.algebras.Count; j++)
+                    for (int j = 0; j < a.Algebras.Count; j++)
                     {
-                        if (b.algebras[i].XPower == a.algebras[j].XPower)
+                        if (b.Algebras[i].XPower == a.Algebras[j].XPower)
                         {
-                            c.Add(b.algebras[i] + a.algebras[j]);
+                            c.Add(b.Algebras[i] + a.Algebras[j]);
                         }
                         else
                         {
-                            c.Add(a.algebras[j]);
+                            c.Add(a.Algebras[j]);
                         }
                     }
 
@@ -287,18 +234,18 @@ namespace AlgebraLibary
             }
             else
             {
-                c.Add(a.algebras[0] + b.algebras[0]);
+                c.Add(a.Algebras[0] + b.Algebras[0]);
             }
 
             if (c.Count == 0) // unlike terms
             {
-                for (int i = 0; i < b.algebras.Count; i++)
+                for (int i = 0; i < b.Algebras.Count; i++)
                 {
-                    c.Add(b.algebras[i]);
+                    c.Add(b.Algebras[i]);
                 }
-                for (int i = 0; i < a.algebras.Count; i++)
+                for (int i = 0; i < a.Algebras.Count; i++)
                 {
-                    c.Add(a.algebras[i]);
+                    c.Add(a.Algebras[i]);
                 }
             }
 
@@ -310,47 +257,47 @@ namespace AlgebraLibary
         {
             List<Algebra> c = new List<Algebra>();
 
-            if (a.algebras.Count != 1 && b.algebras.Count != 1) // If both expressions are not one
+            if (a.Algebras.Count != 1 && b.Algebras.Count != 1) // If both expressions are not one
             {
-                for (int i = 0; i < a.algebras.Count; i++)
+                for (int i = 0; i < a.Algebras.Count; i++)
                 {
-                    for (int j = 0; j < b.algebras.Count; j++)
+                    for (int j = 0; j < b.Algebras.Count; j++)
                     {
-                        if (a.algebras[i].XPower == b.algebras[j].XPower)
+                        if (a.Algebras[i].XPower == b.Algebras[j].XPower)
                         {
-                            c.Add(a.algebras[i] - b.algebras[j]);
+                            c.Add(a.Algebras[i] - b.Algebras[j]);
                         }
                     }
 
                 }
             } 
-            else if (a.algebras.Count == 1)
+            else if (a.Algebras.Count == 1)
             {
-                for (int i = 0; i < a.algebras.Count; i++)
+                for (int i = 0; i < a.Algebras.Count; i++)
                 {
-                    for (int j = 0; j < b.algebras.Count; j++)
+                    for (int j = 0; j < b.Algebras.Count; j++)
                     {
-                        if (a.algebras[i].XPower == b.algebras[j].XPower)
+                        if (a.Algebras[i].XPower == b.Algebras[j].XPower)
                         {
-                            c.Add(a.algebras[i] - b.algebras[j]);
+                            c.Add(a.Algebras[i] - b.Algebras[j]);
                         }
                     }
 
                 }
             }
-            else if (b.algebras.Count == 1)
+            else if (b.Algebras.Count == 1)
             {
-                for (int i = 0; i < b.algebras.Count; i++)
+                for (int i = 0; i < b.Algebras.Count; i++)
                 {
-                    for (int j = 0; j < a.algebras.Count; j++)
+                    for (int j = 0; j < a.Algebras.Count; j++)
                     {
-                        if (b.algebras[i].XPower == a.algebras[j].XPower)
+                        if (b.Algebras[i].XPower == a.Algebras[j].XPower)
                         {
-                            c.Add(b.algebras[i] - a.algebras[j]);
+                            c.Add(b.Algebras[i] - a.Algebras[j]);
                         }
                         else
                         {
-                            c.Add(a.algebras[j]);
+                            c.Add(a.Algebras[j]);
                         }
                     }
 
@@ -358,18 +305,18 @@ namespace AlgebraLibary
             }
             else
             {
-                c.Add(a.algebras[0] - b.algebras[0]);
+                c.Add(a.Algebras[0] - b.Algebras[0]);
             }
 
             if (c.Count == 0) // unlike terms
             {
-                for (int i = 0; i < b.algebras.Count; i++)
+                for (int i = 0; i < b.Algebras.Count; i++)
                 {
-                    c.Add(b.algebras[i]);
+                    c.Add(b.Algebras[i]);
                 }
-                for (int i = 0; i < a.algebras.Count; i++)
+                for (int i = 0; i < a.Algebras.Count; i++)
                 {
-                    c.Add(a.algebras[i]);
+                    c.Add(a.Algebras[i]);
                 }
             }
             
@@ -382,30 +329,30 @@ namespace AlgebraLibary
         {
             List<Algebra> nope = new List<Algebra>() { };
             AlgebraExpression c = new AlgebraExpression(nope) { };
-            AlgebraExpression d = new AlgebraExpression(algebras);
+            AlgebraExpression d = new AlgebraExpression(Algebras);
             List<double> merge = new List<double>();
 
-            for (var i = d.algebras.Count - 1; i > -1; i--)
+            for (var i = d.Algebras.Count - 1; i > -1; i--)
             {
-                if (!merge.Contains(algebras[i].XPower))
+                if (!merge.Contains(Algebras[i].XPower))
                 {
-                    // Console.WriteLine($"Bah: {algebras[i].ToString()}");
-                    merge.Add(algebras[i].XPower);
-                    c.algebras.Add(algebras[i]);
-                    d.algebras.RemoveAt(i);
+                    // Console.WriteLine($"Bah: {Algebras[i].ToString()}");
+                    merge.Add(Algebras[i].XPower);
+                    c.Algebras.Add(Algebras[i]);
+                    d.Algebras.RemoveAt(i);
                 }
             }
 
-            // Console.WriteLine(d.algebras.Count);
+            // Console.WriteLine(d.Algebras.Count);
 
-            for (var i = 0; i < c.algebras.Count; i++)
+            for (var i = 0; i < c.Algebras.Count; i++)
             {
-                for (var j = 0; j < d.algebras.Count; j++)
+                for (var j = 0; j < d.Algebras.Count; j++)
                 {
-                    if (c.algebras[i].XPower == d.algebras[j].XPower)
+                    if (c.Algebras[i].XPower == d.Algebras[j].XPower)
                     {
-                        // Console.WriteLine($"{c.algebras[i]} + {d.algebras[j]} = {c.algebras[i] + d.algebras[j]}");
-                        c.algebras[i] += d.algebras[j];
+                        // Console.WriteLine($"{c.Algebras[i]} + {d.Algebras[j]} = {c.Algebras[i] + d.Algebras[j]}");
+                        c.Algebras[i] += d.Algebras[j];
                     }
                 }
                 // Console.WriteLine(c[i]);
@@ -417,7 +364,7 @@ namespace AlgebraLibary
 
         public AlgebraExpression Sort()
         {
-            List<Algebra> sorted = algebras.OrderByDescending(x => x.XPower).ToList<Algebra>();
+            List<Algebra> sorted = Algebras.OrderByDescending(x => x.XPower).ToList<Algebra>();
             AlgebraExpression sortedAl = new AlgebraExpression(sorted);
             return sortedAl;
         }
@@ -425,9 +372,9 @@ namespace AlgebraLibary
 
         private double[] quadraticEquation(AlgebraExpression eq) //ax^2+bx+c
         {
-            double a = eq.algebras[0].Coefficient;
-            double b = eq.algebras[1].Coefficient;
-            double c = eq.algebras[2].Coefficient;
+            double a = eq.Algebras[0].Coefficient;
+            double b = eq.Algebras[1].Coefficient;
+            double c = eq.Algebras[2].Coefficient;
 
             double discriminant = Math.Pow(b, 2) - 4 * a * c;
             double[] final = new double[2];
@@ -441,19 +388,19 @@ namespace AlgebraLibary
 
         public override string ToString()
         {
-            string returnAlgebra = $"{algebras[0].ToString()}";
+            string returnAlgebra = $"{Algebras[0].ToString()}";
 
-            for (int i = 1; i < algebras.Count; i++)
+            for (int i = 1; i < Algebras.Count; i++)
             {
-                string currentAL = algebras[i].ToString();
+                string currentAL = Algebras[i].ToString();
 
                 if (currentAL.Contains('-')) // negative
                 {
-                    returnAlgebra = $"{returnAlgebra} - {algebras[i].ToString().Remove(0, 1)}";
+                    returnAlgebra = $"{returnAlgebra} - {Algebras[i].ToString().Remove(0, 1)}";
                 }
                 else
                 {
-                    returnAlgebra = $"{returnAlgebra} + {algebras[i].ToString()}";
+                    returnAlgebra = $"{returnAlgebra} + {Algebras[i].ToString()}";
                 }
             }
 
@@ -469,14 +416,14 @@ namespace AlgebraLibary
         {
             double result = 0;
 
-            for (int i = 0; i < algebras.Count; i++)
+            for (int i = 0; i < Algebras.Count; i++)
             {
                 double hold = 0;
-                hold += Math.Pow(sub,algebras[i].XPower);
+                hold += Math.Pow(sub,Algebras[i].XPower);
 
-                if (algebras[i].Coefficient != 0)
+                if (Algebras[i].Coefficient != 0)
                 {
-                    hold *= algebras[i].Coefficient;
+                    hold *= Algebras[i].Coefficient;
                 }
                 
 
@@ -493,7 +440,7 @@ namespace AlgebraLibary
             char[] unknowns = new char[] { 'x', 'y' };
 
             List<string> stringArray = input.Split(' ').ToList<string>();
-            List<Algebra> algebras = new List<Algebra>();
+            List<Algebra> Algebras = new List<Algebra>();
 
             for (int i = 0; i < stringArray.Count; i++)
             {
@@ -531,10 +478,10 @@ namespace AlgebraLibary
                     toAdd.XPower = 0;
                     toAdd.Unknown = "";
                 }
-                algebras.Add(toAdd);
+                Algebras.Add(toAdd);
             }
 
-            return new AlgebraExpression(algebras);
+            return new AlgebraExpression(Algebras);
         }
 
 
@@ -568,8 +515,8 @@ namespace AlgebraLibary
 
     public class Matrix
     {
-        private double[,] matrixInp; private double[] matrixSize;
-        public double[,] MatrixInp { get => matrixInp; set => matrixInp = value; }
+        
+        public double[,]? MatrixInp { get; set; }
 
         public Matrix(double[,] matrixInp)
         {
@@ -578,7 +525,7 @@ namespace AlgebraLibary
 
         public Matrix()
         {
-            MatrixInp = matrixInp;
+            MatrixInp = null;
         }
 
         public static Matrix operator +(Matrix a, Matrix b) // addition
@@ -588,13 +535,13 @@ namespace AlgebraLibary
                 throw new ArgumentException("You can't add matrixes of different dimentions");
             }
 
-            double[,] c = new double[a.matrixInp.GetLength(0), b.matrixInp.GetLength(1)];
+            double[,] c = new double[a.MatrixInp.GetLength(0), b.MatrixInp.GetLength(1)];
 
             for (int i = 0; i < a.MatrixInp.GetLength(0); i++)
             {
                 for (int j = 0; j < a.MatrixInp.GetLength(1); j++)
                 {
-                    c[i, j] = a.matrixInp[i, j] + b.matrixInp[i, j];
+                    c[i, j] = a.MatrixInp[i, j] + b.MatrixInp[i, j];
                 }
             }
 
@@ -608,13 +555,13 @@ namespace AlgebraLibary
                 throw new ArgumentException("You can't add matrixes of different dimentions");
             }
 
-            double[,] c = new double[a.matrixInp.GetLength(0), b.matrixInp.GetLength(1)];
+            double[,] c = new double[a.MatrixInp.GetLength(0), b.MatrixInp.GetLength(1)];
 
             for (int i = 0; i < a.MatrixInp.GetLength(0); i++)
             {
                 for (int j = 0; j < a.MatrixInp.GetLength(1); j++)
                 {
-                    c[i, j] = a.matrixInp[i, j] - b.matrixInp[i, j];
+                    c[i, j] = a.MatrixInp[i, j] - b.MatrixInp[i, j];
                 }
             }
 
@@ -623,16 +570,16 @@ namespace AlgebraLibary
 
         public static Matrix operator *(Matrix a, Matrix b) // mutiplication
         {
-            double[,] c = new double[a.matrixInp.GetLength(0), b.matrixInp.GetLength(1)];
+            double[,] c = new double[a.MatrixInp.GetLength(0), b.MatrixInp.GetLength(1)];
 
-            // Console.WriteLine($"A: {a.matrixInp.GetLength(0)} B: {b.matrixInp.GetLength(1)}");
+            // Console.WriteLine($"A: {a.MatrixInp.GetLength(0)} B: {b.MatrixInp.GetLength(1)}");
 
-            if (a.matrixInp.Rank != b.matrixInp.GetLength(0))
+            if (a.MatrixInp.Rank != b.MatrixInp.GetLength(0))
             {
                 throw new ArgumentException("Can't mutiply matrixes with a different length");
             }
 
-            for (int i = 0; i < a.matrixInp.GetLength(0); i++)
+            for (int i = 0; i < a.MatrixInp.GetLength(0); i++)
             {
                 // puts matrix A's collum into an array
                 double[] row = matrixMathRow(a, i);
@@ -663,11 +610,11 @@ namespace AlgebraLibary
 
         public static Matrix operator *(Matrix a, double b) // scalar mutiplication
         {
-            for (int i = 0; i < a.matrixInp.GetLength(0); i++)
+            for (int i = 0; i < a.MatrixInp.GetLength(0); i++)
             {
-                for (int j = 0; j < a.matrixInp.GetLength(1); j++)
+                for (int j = 0; j < a.MatrixInp.GetLength(1); j++)
                 {
-                    a.matrixInp[i, j] = a.matrixInp[i, j] * b;
+                    a.MatrixInp[i, j] = a.MatrixInp[i, j] * b;
                 }
             }
 
@@ -677,11 +624,11 @@ namespace AlgebraLibary
        
         private static double[] matrixMathRow(Matrix a, int dimension) // gets full row
         {
-            double[] returnRow = new double[a.matrixInp.GetLength(1)];
+            double[] returnRow = new double[a.MatrixInp.GetLength(1)];
 
             for (int i = 0; i < returnRow.Length; i++)
             {
-                returnRow[i] = a.matrixInp[dimension, i];
+                returnRow[i] = a.MatrixInp[dimension, i];
             }
 
             return returnRow;
@@ -691,11 +638,11 @@ namespace AlgebraLibary
         // puts the current collum into array
         private static double[] matrixMathCol(Matrix a, int dimension) // gets full collumn
         {
-            double[] returnCol = new double[a.matrixInp.GetLength(0)];
+            double[] returnCol = new double[a.MatrixInp.GetLength(0)];
 
             for (int i = 0; i < returnCol.Length; i++)
             {
-                returnCol[i] = a.matrixInp[i, dimension];
+                returnCol[i] = a.MatrixInp[i, dimension];
             }
 
             return returnCol;
@@ -705,13 +652,13 @@ namespace AlgebraLibary
         {
             string returnString = "";
 
-            for (int i = 0; i < matrixInp.GetLength(0); i++)
+            for (int i = 0; i < MatrixInp.GetLength(0); i++)
             {
                 string row = "";
 
-                for (int j = 0; j < matrixInp.GetLength(1); j++)
+                for (int j = 0; j < MatrixInp.GetLength(1); j++)
                 {
-                    row = $"{row} {matrixInp[i, j]}";
+                    row = $"{row} {MatrixInp[i, j]}";
                 }
 
                 returnString = $"{returnString} \n {row}";
@@ -743,7 +690,7 @@ namespace AlgebraLibary
 
         private double[,] Cofactors()
         {
-            double[,] coFactor = matrixInp;
+            double[,] coFactor = MatrixInp;
             
             for (int i = 0; i < coFactor.GetLength(0); i++)
             {
@@ -763,26 +710,26 @@ namespace AlgebraLibary
                 }
             }
 
-            return matrixInp;
+            return MatrixInp;
         }
 
         private double[,] subMatrix(int r, int c)
         {
             // d,f indices of result
 
-            int nr = matrixInp.GetLength(0);
-            int cr = matrixInp.GetLength(1);
+            int nr = MatrixInp.GetLength(0);
+            int cr = MatrixInp.GetLength(1);
 
             int di = 0, fi = 0;
 
-            double[,] matrixSub = new double[matrixInp.GetLength(0)- 1, matrixInp.GetLength(1)- 1];
+            double[,] matrixSub = new double[MatrixInp.GetLength(0)- 1, MatrixInp.GetLength(1)- 1];
             
             for (int i = 0; i < nr; i++)
             {
                 for (int j = 0; j < cr; j++)
                 {
                     if (i == r || j == c) continue;
-                    matrixSub[di,fi] = matrixInp[i,j];
+                    matrixSub[di,fi] = MatrixInp[i,j];
                     Console.WriteLine( matrixSub[di,fi]);
                     fi++;
                     
@@ -801,8 +748,8 @@ namespace AlgebraLibary
             // intresting: https://en.wikipedia.org/wiki/Bareiss_algorithm
             // Simlar implementation: https://github.com/borissevo/csharp-bareiss/blob/master/BareissAlgorithm/BareissAlg.cs
 
-            double[,] det = new double[matrixInp.GetLength(0), matrixInp.GetLength(1)];
-            det = (double[,])matrixInp.Clone();
+            double[,] det = new double[MatrixInp.GetLength(0), MatrixInp.GetLength(1)];
+            det = (double[,])MatrixInp.Clone();
 
             // double det = 0;
             int n = det.GetLength(0) -1;
