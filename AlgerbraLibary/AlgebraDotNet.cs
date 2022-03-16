@@ -98,7 +98,11 @@ namespace AlgebraLibary
             Algebras = algebras;
             // Roots = quadraticEquation(this);
         }
-        
+
+        public AlgebraExpression()
+        {
+            Algebras = this.Algebras;
+        }
 
         public static AlgebraExpression operator *(AlgebraExpression a, AlgebraExpression b)
         {
@@ -483,33 +487,33 @@ namespace AlgebraLibary
 
             return new AlgebraExpression(Algebras);
         }
+    }
 
 
-        public class AlgebraEquation
+    public class AlgebraEquation
+    {
+        static Random random = new Random();
+
+        private static Algebra OneGen(int max, double xP)
         {
-            static Random random = new Random();
 
-            private static Algebra OneGen(int max, double xP)
+            Algebra algebra = new Algebra(random.Next(1, max + 20), xP, "x");
+
+            return algebra;
+        }
+
+        public AlgebraExpression QuadraticGen(int maxSize, int degree)
+        {
+            List<Algebra> al = new List<Algebra>();
+
+            for (int i = 0; i <= degree; i++)
             {
-
-                Algebra algebra = new Algebra(random.Next(1, max + 20), xP, "x");
-
-                return algebra;
+                Algebra bigal = OneGen(maxSize, i);
+                al.Add(bigal);
             }
+            AlgebraExpression algs = new AlgebraExpression(al);
 
-            public AlgebraExpression QuadraticGen(int maxSize, int degree)
-            {
-                List<Algebra> al = new List<Algebra>();
-
-                for (int i = 0; i <= degree; i++)
-                {
-                    Algebra bigal = OneGen(maxSize, i);
-                    al.Add(bigal);
-                }
-                AlgebraExpression algs = new AlgebraExpression(al);
-
-                return algs.Sort();
-            }
+            return algs.Sort();
         }
     }
 
@@ -820,6 +824,12 @@ namespace AlgebraLibary
 
             return new Matrix(matrixReturn);
         }
+    }
+
+
+    public class Surd
+    {
+
     }
 }
 
