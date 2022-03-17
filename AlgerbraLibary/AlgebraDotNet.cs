@@ -519,7 +519,6 @@ namespace AlgebraLibary
 
     public class Matrix
     {
-        
         public double[,]? MatrixInp { get; set; }
 
         public Matrix(double[,] matrixInp)
@@ -701,7 +700,7 @@ namespace AlgebraLibary
                 for (int j = 0; j < coFactor.GetLength(1); j++)
                 {
                     double[,] sub = subMatrix(i, j);
-                    double det = Determinant(sub);
+                    double det = SubDeterminant(sub);
 
                     if ((i + j) % 2 == 0) // "checkerboard inversion"
                     {
@@ -747,11 +746,11 @@ namespace AlgebraLibary
             return matrixSub;
         }
 
-        public double Determinant() // help?? https://stackoverflow.com/questions/5051528/how-to-calculate-matrix-determinant-nn-or-just-55
-        {
-            // intresting: https://en.wikipedia.org/wiki/Bareiss_algorithm
-            // Simlar implementation: https://github.com/borissevo/csharp-bareiss/blob/master/BareissAlgorithm/BareissAlg.cs
 
+        // Current implementation: https://en.wikipedia.org/wiki/Bareiss_algorithm
+
+        public double Determinant() 
+        {
             double[,] det = new double[MatrixInp.GetLength(0), MatrixInp.GetLength(1)];
             det = (double[,])MatrixInp.Clone();
 
@@ -770,43 +769,35 @@ namespace AlgebraLibary
                     }
                 }
             }
-            
+
             return det[n, n];
 
         }
 
-        private double Determinant(double[,] sub) // for sub matrixes
+        private double SubDeterminant(double[,] sub) // for sub matrixes
         {
-            
+            double[,] det = (double[,])sub.Clone();
 
-            int n = sub.GetLength(0) - 1;
-            double[,] subMatrix = new double[n, n];
-            subMatrix = (double[,])sub.Clone();
+            int n = det.GetLength(0)-1;
 
-
-
+           
             for (int k = 0; k < n; k++)
             {
-                for (int i = k + 1; i < n; i++)
+                for (int i = k + 1; i <= n; i++)
                 {
-                    double kd = (k == 0 ? 1 : subMatrix[k - 1, k - 1]);
-
                     for (int j = k + 1; j <= n; j++)
                     {
-                        double d1 = (subMatrix[i, j] * subMatrix[k, k]);
-                        double d2 = (subMatrix[i, k] * subMatrix[k, j]);
-                        subMatrix[i, j] = (d1 - d2) / kd;
+                        det[i, j] = ((det[i, j] * det[k, k]) - (det[i, k] * det[k, j])) / (k == 0 ? 1 : det[k - 1, k - 1]);
                     }
                 }
             }
 
-            
-
-            return subMatrix[n, n];
-
+            return det[n, n+1];
         }
 
 
+
+        
 
         public Matrix RandomMatrix(int row, int col, int maxNum)
         {
@@ -826,10 +817,79 @@ namespace AlgebraLibary
         }
     }
 
-
-    public class Surd
+    // Algorithm: https://en.wikipedia.org/wiki/Stern%E2%80%93Brocot_tree
+    public class Fraction
     {
+        // public double ToConvert { get; set; }
+        public int Numerator { get; set; }
+        public int Denominator { get; set; }
 
+        public Fraction(int numerator, int denominator)
+        {
+            Numerator = numerator;
+            Denominator = denominator;
+        }
+
+        public static Fraction operator +(Fraction a, Fraction b)
+        {
+            if (a.Denominator != b.Denominator)
+            {
+                throw new ArgumentException("You can't add fractions of different denominators");
+            }
+
+            a.Numerator = a.Numerator + b.Numerator;
+
+            return a;   
+        }
+
+        public static Fraction operator -(Fraction a, Fraction b)
+        {
+            if (a.Denominator != b.Denominator)
+            {
+                throw new ArgumentException("You can't subtract fractions of different denominators");
+            }
+
+            a.Numerator = a.Numerator - b.Numerator;
+
+            return a;
+        }
+
+        public static Fraction operator *(Fraction a, Fraction b)
+        {
+            a.Numerator = a.Numerator * b.Numerator;
+            a.Denominator = a.Denominator * b.Denominator;
+            return a;
+        }
+
+        public static Fraction operator /(Fraction a, Fraction b)
+        {
+            a.Numerator = a.Numerator * b.Denominator;
+            a.Denominator = a.Denominator * b.Numerator;
+
+            return a;
+        }
+
+        
+
+        public override string ToString()
+        {
+            string returnS = $"{Numerator}/{Denominator}";
+
+            return returnS;
+        }
+
+        /* https://en.wikipedia.org/wiki/Stern%E2%80%93Brocot_tree
+         * Initialize two values L and H to 0/1 and 1/0, respectively.
+           Until q is found, repeat the following steps:
+                Let L = a/b and H = c/d; compute the mediant M = (a + c)/(b + d).
+                If M is less than q, then q is in the open interval (M,H); replace L by M and continue.
+                If M is greater than q, then q is in the open interval (L,M); replace H by M and continue.
+                In the remaining case, q = M; terminate the search algorithm.
+         */
+        public void Convert(double toConvert)
+        {
+            double d = 1/0
+        }
     }
 }
 
