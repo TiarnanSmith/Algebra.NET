@@ -928,6 +928,7 @@ namespace AlgebraLibary
             return a.toDouble() == b.toDouble();
         }
 
+
         public static bool operator != (Fraction a, Fraction b)
         {
             return a.toDouble() > b.toDouble();
@@ -1019,7 +1020,7 @@ namespace AlgebraLibary
                 // Mediant - M
                 Fraction M = new Fraction(L.Numerator+H.Numerator, L.Denominator+H.Denominator);
 
-                Console.WriteLine(M);
+                // Console.WriteLine(M);
 
                 if (M.Denominator * (toConvert + MaxErrorRate) < M.Numerator) // * (toConvert + MaxErrorRate) 
                 {
