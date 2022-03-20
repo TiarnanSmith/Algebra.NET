@@ -84,6 +84,7 @@ namespace AlgebraLibary
             {
                 returnAlgebra = $"{Coefficient}{Unknown}^{XPower}";
             }
+            
 
             return returnAlgebra;
         }
@@ -114,10 +115,9 @@ namespace AlgebraLibary
                 {
                     for (int j = 0; j < b.Algebras.Count; j++)
                     {
-
                         c.Add(a.Algebras[i] * b.Algebras[j]);
+                        Console.WriteLine($"{a.Algebras[i]} * {b.Algebras[j]} = {a.Algebras[i] * b.Algebras[j]}");
                     }
-
                 }
             }
             else if (a.Algebras.Count == 1)
@@ -148,6 +148,8 @@ namespace AlgebraLibary
             {
                 c.Add(a.Algebras[0] * b.Algebras[0]);
             }
+
+            
 
             return new(c);
         }
@@ -463,11 +465,21 @@ namespace AlgebraLibary
                 toAdd.Unknown = "x";
 
                 stringArray[i] = stringArray[i].TrimStart('+'); // removes plus sign
+                
+                
+                
                 if (stringArray[i].Contains("x^"))
                 {
                     string[] local = stringArray[i].Split($"{unknowns[0]}^");
                     toAdd.Coefficient = Convert.ToDouble(local[0]);
                     toAdd.XPower = Convert.ToDouble(local[1]);
+                }
+                else if (stringArray[i].Any(char.IsDigit) != true && stringArray[i].Contains("x")) // coeffecients
+                {
+                    string[] local = stringArray[i].Split($"{unknowns[0]}");
+                    toAdd.Coefficient = 1;
+                    toAdd.Unknown = $"{unknowns[0]}";
+                    toAdd.XPower = 1;
                 }
                 else if (stringArray[i].Contains("x"))
                 {
@@ -830,14 +842,25 @@ namespace AlgebraLibary
             Denominator = denominator;
         }
 
+        public Fraction()
+        {
+            Numerator = 0;
+            Denominator = 0;
+        }
+
         public static Fraction operator +(Fraction a, Fraction b)
         {
             if (a.Denominator != b.Denominator)
             {
-                throw new ArgumentException("You can't add fractions of different denominators");
+                // throw new ArgumentException("You can't add fractions of different denominators");
+
+                Fraction[] cF = commmonFractions(a,b);
+                a = cF[0];
+                b = cF[0];
             }
 
             a.Numerator = a.Numerator + b.Numerator;
+            a.Denominator = a.Denominator + b.Denominator;
 
             return a;   
         }
@@ -850,6 +873,7 @@ namespace AlgebraLibary
             }
 
             a.Numerator = a.Numerator - b.Numerator;
+            a.Denominator = a.Denominator + b.Denominator;
 
             return a;
         }
@@ -861,6 +885,14 @@ namespace AlgebraLibary
             return a;
         }
 
+        public static Fraction operator *(Fraction a, int b)
+        {
+            a.Numerator = a.Numerator * b;
+            a.Denominator = a.Denominator * b;
+            return a;
+        }
+
+
         public static Fraction operator /(Fraction a, Fraction b)
         {
             a.Numerator = a.Numerator * b.Denominator;
@@ -869,7 +901,37 @@ namespace AlgebraLibary
             return a;
         }
 
-        
+        // comparison
+
+        public static bool operator <(Fraction a, Fraction b)
+        {
+            return a.toDouble() < b.toDouble();
+        }
+
+        public static bool operator >(Fraction a, Fraction b)
+        {
+            return a.toDouble() > b.toDouble();
+        }
+
+        public static bool operator <=(Fraction a, Fraction b)
+        {
+            return a.toDouble() <= b.toDouble();
+        }
+
+        public static bool operator >=(Fraction a, Fraction b)
+        {
+            return a.toDouble() >= b.toDouble();
+        }
+
+        public static bool operator == (Fraction a, Fraction b)
+        {
+            return a.toDouble() == b.toDouble();
+        }
+
+        public static bool operator != (Fraction a, Fraction b)
+        {
+            return a.toDouble() > b.toDouble();
+        }
 
         public override string ToString()
         {
@@ -878,118 +940,102 @@ namespace AlgebraLibary
             return returnS;
         }
 
-        /* https://en.wikipedia.org/wiki/Stern%E2%80%93Brocot_tree
-         * Initialize two values L and H to 0/1 and 1/0, respectively.
-           Until q is found, repeat the following steps:
-                Let L = a/b and H = c/d; compute the mediant M = (a + c)/(b + d).
-                If M is less than q, then q is in the open interval (M,H); replace L by M and continue.
-                If M is greater than q, then q is in the open interval (L,M); replace H by M and continue.
-                In the remaining case, q = M; terminate the search algorithm.
-         */
-        public void Convert(double toConvert)
+
+        public double toDouble()
         {
-            double d = 1/0
+            double n = Convert.ToDouble(Numerator);
+            double d = Convert.ToDouble(Denominator);
+
+            return n / d;
         }
-    }
-}
 
 
-namespace unsimplifedForm
-{
-    public class surd
-    {
-        private double radical;
-        private double degree;
-        private double? simpifedRad;
-        public double Radical
+        private static Fraction[] commmonFractions(Fraction a, Fraction b)
         {
-            get { return radical; }
-            set
+            int LCM = LowestCommonMultiple(a.Denominator, b.Denominator);
+
+            a = new Fraction(a.Numerator * (LCM / a.Denominator), LCM);
+            b = new Fraction(b.Numerator * (LCM / b.Denominator), LCM);
+
+            Fraction[] toReturn = new Fraction[2] { a,b};
+            return toReturn;
+        }
+
+
+        // https://en.wikipedia.org/wiki/Least_common_multiple
+        private static int LowestCommonMultiple(int a, int b)
+        {
+           return (int)(Math.Abs(a * b)/GreatestCommonDivisor(a,b));
+        }
+
+        // https://en.wikipedia.org/wiki/Greatest_common_divisor
+        private static int GreatestCommonDivisor(int a, int b)
+        {
+            while (b != 0)
             {
-                radical = value;
-                simpifedRad = radicalSimplify(value)[0];
+                int store = b;
+                b = a % b;
+                a = store;
             }
+            return a;
         }
-        public double Degree
+
+
+        // Python Implementation: https://stackoverflow.com/questions/5124743/algorithm-for-simplifying-decimal-to-fractions
+        // C# Implementation: https://stackoverflow.com/questions/5124743/algorithm-for-simplifying-decimal-to-fractions/32903747#32903747
+        // Algorithm: https://en.wikipedia.org/wiki/Stern%E2%80%93Brocot_tree
+
+
+        public Fraction doubleToFraction(double toConvert, double errorRate)
         {
-            get { return degree; }
-            set
+            int sign = Math.Sign(toConvert);
+            
+            if (sign == -1)
             {
-                degree = value;
-                degree = radicalSimplify(radical)[1];
+                toConvert = Math.Abs(toConvert);
             }
-        }
+            
+            double MaxErrorRate = sign == 0 ? errorRate : toConvert * errorRate;
 
-        public surd(double radical, double degree)
-        {
-            Radical = radical;
-            Degree = degree;
-        }
+            int n = (int)Math.Floor(toConvert);
+            toConvert -= n;
 
-
-
-        /*
-        private double[] radicalSimplify(double rad)
-        {
-            int radicalSize = rad.ToString().Length + 20 / 2;
-
-            double[] surdStore = new double[2];
-            surdStore[0] = rad;
-
-
-            for (int i = radicalSize; i > 2; i--)
+            if (toConvert < MaxErrorRate)
             {
-                double sqrNum = Math.Pow(i, 2);
+                return new Fraction(sign * n, 1);
+            }
+            if (1 - MaxErrorRate < toConvert)
+            {
+                return new Fraction(sign * (n + 1), 1);
+            }
+            
 
-                if (rad % i == 0 && rad != sqrNum)
+            Fraction H = new Fraction(1, 1); // UPPER
+            Fraction L = new Fraction(0, 1); // LOWER
+
+            
+            while (true)
+            {
+                // Mediant - M
+                Fraction M = new Fraction(L.Numerator+H.Numerator, L.Denominator+H.Denominator);
+
+                Console.WriteLine(M);
+
+                if (M.Denominator * (toConvert + MaxErrorRate) < M.Numerator) // * (toConvert + MaxErrorRate) 
                 {
-                    surdStore[0] = surdStore[0] / sqrNum;
-                    surdStore[1] = i;
-                    Console.WriteLine(surdStore[0]);
+                    H = M;
+                }
+                else if (M.Numerator < (toConvert - MaxErrorRate) * M.Denominator) // (toConvert - MaxErrorRate) * 
+                {
+                    L = M;
+                }
+                else
+                {
+                    // Fraction toReturn = new Fraction((n * (M.Denominator + M.Numerator)) * sign, M.Denominator);
+                    return M;
                 }
             }
-            return surdStore;
-        }
-        */
 
-        private double[] radicalSimplify(double rad)
-        {
-
-            double[] surdStore = new double[2];
-            double squareNum = 1; double squardSimp = 1;
-            var i = 2;
-            var iteration = 0;
-
-            // while loop method needs refining to allow for square numbers > 9
-            // unsure how to find a route but not count off until infinity
-
-            while (iteration < 2)
-            {
-                squareNum = Math.Pow(i, 2);
-                squardSimp = surdStore[0] % squareNum;
-
-                if (squardSimp == 0)
-                {
-                    surdStore[0] = rad / squareNum;
-                    surdStore[1] = surdStore[1] + (squareNum / i);
-                }
-                if (i == 9)
-                {
-                    break;
-                }
-
-                i++;
-            }
-
-            return surdStore;
-        }
-
-
-        public override string ToString()
-        {
-            string returnString = $"{degree}/{radical}";
-
-            return returnString;
         }
     }
 }
