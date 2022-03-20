@@ -378,7 +378,7 @@ namespace AlgebraLibary
                 // Console.WriteLine(c[i]);
             }
 
-            Console.WriteLine($"C= {c.ToString()}");
+            // Console.WriteLine($"C= {c.ToString()}");
             return c;
         }
 
