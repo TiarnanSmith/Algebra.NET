@@ -52,22 +52,29 @@ namespace AlgebraLibary
 
         public static Algebra operator *(Algebra a, Algebra b)
         {
-            if (a.Unknown == b.Unknown)
+            if (a.Unknown == b.Unknown && (a.XPower >= 0 || b.XPower >= 0)) // W
             {
-                return new(a.Coefficient * b.Coefficient, a.XPower + b.XPower, a.Unknown = b.Unknown);
+                return new(a.Coefficient * b.Coefficient, a.XPower + b.XPower, a.Unknown = a.Unknown);
             }
-            else if (a.Unknown == "") // if there is no x term
+            else if (b.XPower != 0)
             {
-                return new(a.Coefficient * b.Coefficient, a.XPower = a.XPower + b.XPower, a.Unknown = b.Unknown);
+                return new(a.Coefficient * b.Coefficient, a.XPower + b.XPower, b.Unknown);
             }
-            else // (a.Unknown != b.Unknown) If the x and y terms are not the same
+            else if (a.XPower == 0)
             {
+                return new(a.Coefficient * b.Coefficient, a.XPower + b.XPower, a.Unknown);
+            }
+            else // (a.Unknown != b.Unknown && (a.XPower < 0 && b.XPower < 0)) // If the x and y terms are not the same - DW
+            {
+                // Console.WriteLine("This shouldn't have the functionality to run yet!");
                 return new(a.Coefficient * b.Coefficient, a.XPower = a.XPower, a.Unknown = a.Unknown + b.Unknown);
             }
-
         }
 
-
+        /// <summary>
+        /// Converts the <see cref="Algebra"/> class into a <see langword="string"/>.
+        /// </summary>
+        /// <returns>It returns a <see langword="string"/>.</returns>
         public override string ToString()
         {
             string returnAlgebra;
@@ -105,7 +112,9 @@ namespace AlgebraLibary
             Algebras = this.Algebras;
         }
 
-        public static AlgebraExpression operator *(AlgebraExpression a, AlgebraExpression b)
+
+        
+        public static AlgebraExpression operator *(AlgebraExpression a, AlgebraExpression b) // nned more than just a because a is self modying
         {
             List<Algebra> c = new List<Algebra>();
 
@@ -116,7 +125,8 @@ namespace AlgebraLibary
                     for (int j = 0; j < b.Algebras.Count; j++)
                     {
                         c.Add(a.Algebras[i] * b.Algebras[j]);
-                        Console.WriteLine($"{a.Algebras[i]} * {b.Algebras[j]} = {a.Algebras[i] * b.Algebras[j]}");
+                        Console.WriteLine($"i:{i}, j:{j} = {c[c.Count-1]}" );
+                        // Console.WriteLine($"{a.Algebras[i]} * {b.Algebras[j]} = {a.Algebras[i] * b.Algebras[j]}");
                     }
                 }
             }
@@ -330,7 +340,10 @@ namespace AlgebraLibary
             return new(c);
         }
 
-
+        /// <summary>
+        /// It collects the <b>like-terms</b> of a <see cref="AlgebraExpression"/>.
+        /// </summary>
+        /// <returns>It returns a <see cref="AlgebraExpression"/>.</returns>
         public AlgebraExpression collectingLikeTerms() // merges like terms
         {
             List<Algebra> nope = new List<Algebra>() { };
@@ -344,12 +357,13 @@ namespace AlgebraLibary
                 {
                     // Console.WriteLine($"Bah: {Algebras[i].ToString()}");
                     merge.Add(Algebras[i].XPower);
-                    c.Algebras.Add(Algebras[i]);
-                    d.Algebras.RemoveAt(i);
+                    // Solution from 20/03/22
+                    Algebra hold = new Algebra(0, Algebras[i].XPower, Algebras[i].Unknown);
+                    c.Algebras.Add(hold);
                 }
             }
 
-            // Console.WriteLine(d.Algebras.Count);
+            
 
             for (var i = 0; i < c.Algebras.Count; i++)
             {
@@ -364,7 +378,7 @@ namespace AlgebraLibary
                 // Console.WriteLine(c[i]);
             }
 
-            // Console.WriteLine($"C= {c.ToString()}");
+            Console.WriteLine($"C= {c.ToString()}");
             return c;
         }
 
@@ -392,6 +406,10 @@ namespace AlgebraLibary
             return final;
         }
 
+        /// <summary>
+        /// Converts the <see cref="AlgebraExpression"/> class into a <see langword="string"/>.
+        /// </summary>
+        /// <returns>It returns a <see langword="string"/>.</returns>
         public override string ToString()
         {
             string returnAlgebra = $"{Algebras[0].ToString()}";
@@ -414,10 +432,13 @@ namespace AlgebraLibary
             return returnAlgebra;
         }
 
-        
 
 
-        
+
+        /// <summary>
+        /// Substitutes a <see cref="double"/> into the <b>unknowns</b> of the <see cref="AlgebraExpression"/> Type.
+        /// </summary>
+        /// <returns>It returns a <see langword="double"/>.</returns>
         public double Substitute(double sub)
         {
             double result = 0;
@@ -441,6 +462,11 @@ namespace AlgebraLibary
             return result;
         }
 
+
+        /// <summary>
+        /// Converts a <see cref="string"/> into  a <see cref="AlgebraExpression"/>.
+        /// </summary>
+        /// <returns>It returns a <see cref="AlgebraExpression"/>.</returns>
         public AlgebraExpression ToAlgebra(string input) // converts text into written algerbra
         {
             char[] unknowns = new char[] { 'x', 'y' };
@@ -934,6 +960,10 @@ namespace AlgebraLibary
             return a.toDouble() > b.toDouble();
         }
 
+        /// <summary>
+        /// Converts the <see cref="Fraction"/> class into a <see langword="string"/>.
+        /// </summary>
+        /// <returns>It returns a <see langword="string"/>.</returns>
         public override string ToString()
         {
             string returnS = $"{Numerator}/{Denominator}";
@@ -964,6 +994,8 @@ namespace AlgebraLibary
 
 
         // https://en.wikipedia.org/wiki/Least_common_multiple
+
+        
         private static int LowestCommonMultiple(int a, int b)
         {
            return (int)(Math.Abs(a * b)/GreatestCommonDivisor(a,b));
