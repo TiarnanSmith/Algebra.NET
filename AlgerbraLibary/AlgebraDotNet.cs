@@ -112,8 +112,8 @@ namespace AlgebraLibary
             Algebras = this.Algebras;
         }
 
-
         
+
         public static AlgebraExpression operator *(AlgebraExpression a, AlgebraExpression b) // nned more than just a because a is self modying
         {
             List<Algebra> c = new List<Algebra>();
@@ -125,7 +125,7 @@ namespace AlgebraLibary
                     for (int j = 0; j < b.Algebras.Count; j++)
                     {
                         c.Add(a.Algebras[i] * b.Algebras[j]);
-                        Console.WriteLine($"i:{i}, j:{j} = {c[c.Count-1]}" );
+                        // Console.WriteLine($"i:{i}, j:{j} = {c[c.Count-1]}" );
                         // Console.WriteLine($"{a.Algebras[i]} * {b.Algebras[j]} = {a.Algebras[i] * b.Algebras[j]}");
                     }
                 }
@@ -389,6 +389,23 @@ namespace AlgebraLibary
             return sortedAl;
         }
 
+        /// <summary>
+        /// Raises a expression to the power.
+        /// </summary>
+        /// <param name="a">The expression which is being rasied to by b</param>
+        /// <param name="b">Power being raised.</param>
+        /// <returns>Returns a <see cref="AlgebraExpression"/></returns>
+        public static AlgebraExpression Pow(AlgebraExpression a, int b)
+        {
+            AlgebraExpression c = new AlgebraExpression(a.Algebras);
+            for (int i = 0; i < b-1; i++)
+            {
+                a = a * c;
+            }
+
+            return a;
+        }
+
 
         private double[] quadraticEquation(AlgebraExpression eq) //ax^2+bx+c
         {
@@ -491,9 +508,7 @@ namespace AlgebraLibary
                 toAdd.Unknown = "x";
 
                 stringArray[i] = stringArray[i].TrimStart('+'); // removes plus sign
-                
-                
-                
+ 
                 if (stringArray[i].Contains("x^"))
                 {
                     string[] local = stringArray[i].Split($"{unknowns[0]}^");
